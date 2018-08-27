@@ -1,0 +1,64 @@
+# Setting up a modern build chain for an OSS
+
+## Abstract
+This article covers how to set up a continuous build chain for an open source
+project, relying on free services.
+**It is derived from the work down to have automated build for NFluent.**
+As such, it will covers tools and technologies that are used for NFluent.
+We will list known alternate tools in the relevant sections.
+
+From a technological stack perspective, it covers .Net (C#) and Windows, as it
+relies on **MsBuild** for the build script.
+
+The objective is to have a buildchain which:
+1. Can be run on local or in a build services
+3. Take care of version number
+4. Run tests
+5. Capture tests coverage
+6. Generate a coverage report for local analysis
+7. Publish coverage data in a public fashion
+8. Generate a nuget package
+9. Publish the package
+10. Support alpha versioning
+
+From a workflow perspective
+1. can be run manually on the coder machine
+2. can be run automatically when code is pushed on Github
+3. can be run automatically on Pull Request
+4. Notify results on Slack
+
+## Prerequisite
+### Github account
+Now that are you over the big 'Microsoft-bought-GitHub' scare, we are going to
+use it as our main source repository.
+While Github is the leader for OSS hosting, GitLab and BitBucket are notable
+alternatives.
+If you do not have a GitHub account, [go create one](http://github.com/join).
+![Github welcome page](github.png)
+
+### AppVeyor account
+[Appveyor](https://ci.appveyor.com/login) is an online continuous integration
+service that has a free tiers while also providing Windows image.
+You can log in using GitHub, which eases integration.
+![AppVeyor welcome page](appveyor.png)
+
+
+### Nuget account
+Nuget is package management tool for Net, but is also a
+[central repository](https://www.nuget.org/). You will be able to store
+your public package there.
+You can also store your package on [MyGet](https://www.myget.org/), if you want/
+need control on who can access the package. Bear in mind that the **Nuget.org**
+is configured as a repository in your tools (Nuget, Visual Studio,...), you
+will need to declare [MyGet](https://www.myget.org/) as an extra repository.
+![Nuget landing page](nuget.png)
+You can also use **AppVeyor** to store artifacts, but it should be reserved
+for cascaded build chains, as integration with IDEs is less comfortable than
+Nuget or Myget.
+
+### Codecov.io account
+You can use GitHub as your identify provider.
+[Codecov.io](https://codecov.io) stores and publish your project's coverage
+statistics. It also provides coverage history, allowing you to see delta between
+two commits.
+![CodeCov.Io snapshot](codecov.png)
