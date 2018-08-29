@@ -19,11 +19,12 @@ While most of my positions involves code, I also touched on QA and BA
 activities. I am now in CTO-like positions for 2500 ITs and had the great
 privilege to work with well-known french experts, as well as lesser-known ones.
 
-So my opinion is based on things and events  I have experienced first-hand as
-a developer, things I have seen others struggle or succeed with, problems
+So my opinion is based on things and events **I have experienced first-hand** as a developer, things I have seen others struggle or succeed with, problems
 encountered by teams I have helped as well and views and issues that other
 experts taught me about.
-And more books than I can recount. Of course, this dos not imply that I am
+Basically, I have been through all this sh*t and made most of the mistakes
+listed here.
+Of course, this dos not imply that I am
 right, but at least, grant me that I have a comprehensive view of what I am
 talking about.
 
@@ -46,9 +47,18 @@ small, with limited dependencies, hence run (usually fast). When a unit test
 fails, it is easy to identify which part of the code is responsible.
 
 Actually, [TDD is about **every form of
-tests**](https://en.wikipedia.org/wiki/Test-driven_development#Test-driven_development_cycle)
-. As an example, I often write performance
+tests**](https://en.wikipedia.org/wiki/Test-driven_development#Test-driven_development_cycle).
+For example, I often write performance
 tests as part of my TDD routine; end-to-end tests as well.
+Furthermore, this is about requirements, not implementation: **you  write a
+new test **when you need** to fulfill a requirement. You do not write a test
+**when you need** to code a new class or a new method**. Subtle, but important
+nuance.
+
+And when Kent Beck wrote about tests being isolated, he meant between one and
+another. For example, having one test inserting record in a table while
+another reads that same table is probably a bad idea, as the result of the
+tests may vary depending in the order of which the tests are run.
 
 ### 2. Automated testing is all about unit tests
 No, automated testing describes a process: having tests automatically run as
@@ -60,45 +70,66 @@ There is an emphasis on unit tests because they are fast, localized and you
 can execute them en masse. But **integration tests, end-to-end tests, system
 tests, performance tests**, you name it, **must be part of your building
 chain**.
+You must reduce as much manual tests as you can. Manual tests are expensive
+and give slow feedback.
 
 ![Sickness](unit.gif)
 
 ### 3. 100% code coverage requires extensive unit testing
-NO, NO, NO and f...g no. **Improving coverage by adding tests that exert not
-yet tested methods or classes is wrong** and lead you to a frozen hell of
-coupling and entanglement, where any code change breaks tests and you spend
-your time fixing them. In theory, **untested code should not exist in the
-first place**, according to TDD mantras.
+NO, NO, NO and f...g no. In a perfect TDD world, **untested code does not
+exist in the first place**.
 
 Writing a test is akin to writing down a contract or a specification, it fixes
 and enforces many decisions.
-__Your tests must focus on use cases__, behavior, use case and end to end tests
-are probably the most important ones. Code coverage must include every tests,
+__Your tests must focus on behavior__; behavior driven and use cases tests are the most important ones. Code coverage must include every tests,
 disregarding its type.
 
+**Improving coverage by simply adding specific tests for untested methods and
+classes is wrong**. Added tests must be justified by some
+requirements (new or existing); otherwise, it means the **code has no actual
+use**. It will lead your codebase to excessive coupling between tests and
+implementation details and your tests will break whenever refactoring occurs.
+
+For example, if you implemented a calendar module that support [Gregorian to
+Julian
+conversion](https://www.timeanddate.com/calendar/julian-gregorian-switch.html),
+ either you have a pertinent test for this feature, or you just remove it.
+
 ### 4. You have to make private methods public to reach 100%
+
+Again, **no**: private methods will be tested through public entry points.
+Once again, **unit testing is not about testing methods one by one**.
+
 ![Exposing](./simpsons-nelson-ha-ha-o.gif)
 
-Again, **no**: private methods must be tested through public entry points. If they cannot be tested in full, you need to __challenge the relevance__ of the
-non covered part: __it is __probably __useless code.__
-
 Wondering about how to test private methods is a clear sign you've got TDD
-wrong. If this is not clear to you, I suggest you stop **ALL UNIT TESTING**
+wrong. If this is not clear to you, I suggest you stop ** UNIT TESTING**
 altogether and contemplate BDD. When **you get the grasp on BDD**, you will **be able to embrace TDD**.
+If they cannot be tested in full, you need to __challenge the relevance__
+of the non covered part: __it is __probably __useless code.__
 
-### 5. Some code should not be tested
+### 5. Some code do not need be tested
 This one is somewhat true, but probably not to the extent you think it is:
 __code that works by construction does not require testing if it never changes__.
 That being said, please show me some code that will never change.
 
+![This will never happen, right?](./deathstar.gif)
 Same for trivial code: I am an average developer, and my long
-experience have taught me that code that works on the first attempt is an happy
+experience have taught me that my code working on the first attempt is an happy
 accident. Even if you are the god of code, chances are somebody else will break
 your code in a couple of months, weeks or even hours.
-And yes, that somebody else is probably the future you.
-
-As I said earlier, a test is a contract. And contracts exist because people
+And yes, that somebody else is probably the future you. Remember as I said
+earlier, a test is a contract. And contracts exist because people
 change, context changes, etc....
+
+I often get this remark: **"Testing getters or setters is simply a waste of
+time."**. Seems pretty obvious, isn't it?
+What is wrong with this remark is the **implicit notion of testing (trivial)
+getters or setters in isolation**. Which would probably be not only useless
+but likely harmful.
+Unit testing is not about testing method in isolation. **Your getters and
+setters should be tested as part of a larger, behavior related, test.**
+
 
 ### 6. You need to use a mocking framework
 Nope, **chances are you don't**. Mocking frameworks are great pieces of
