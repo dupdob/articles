@@ -30,9 +30,9 @@ talking about.
 
 # Fallacies about unit testing
 
+### 1. TDD is all about unit tests
 ![You keep using that word](./you-keep-using-that-word.gif)
 
-### 1. TDD is all about unit tests
 **Big NO**, TDD, a.k.a 'Test First Development' is about __defining what the code is
 expected to produce, capturing this __as some __test(s) and__ then __implementing just
 enough code to make it pass__. Unit testing is about __testing small parts of
@@ -60,6 +60,8 @@ another. For example, having one test inserting record in a table while
 another reads that same table is probably a bad idea, as the result of the
 tests may vary depending in the order of which the tests are run.
 
+___
+
 ### 2. Automated testing is all about unit tests
 No, automated testing describes a process: having tests automatically run as
 part of your build/delivery chain. It covers every kind of tests you __can
@@ -67,13 +69,15 @@ perform automatically__: behavior tests, stress tests, performance tests,
 integration tests, system tests, UI tests....
 
 There is an emphasis on unit tests because they are fast, localized and you
-can execute them en masse. But **integration tests, end-to-end tests, system
+can execute them en masse. But **feature tests, use case tests, system
 tests, performance tests**, you name it, **must be part of your building
 chain**.
 You must reduce as much manual tests as you can. Manual tests are expensive
 and give slow feedback.
 
 ![Sickness](unit.gif)
+
+___
 
 ### 3. 100% code coverage requires extensive unit testing
 NO, NO, NO and f...g no. In a perfect TDD world, **untested code does not
@@ -94,29 +98,34 @@ For example, if you implemented a calendar module that support [Gregorian to
 Julian
 conversion](https://www.timeanddate.com/calendar/julian-gregorian-switch.html),
  either you have a pertinent test for this feature, or you just remove it.
+___
 
 ### 4. You have to make private methods public to reach 100%
+![Exposing](./simpsons-nelson-ha-ha-o.gif)
 
 Again, **no**: private methods will be tested through public entry points.
 Once again, **unit testing is not about testing methods one by one**.
 
-![Exposing](./simpsons-nelson-ha-ha-o.gif)
 
 Wondering about how to test private methods is a clear sign you've got TDD
 wrong. If this is not clear to you, I suggest you stop ** UNIT TESTING**
 altogether and contemplate BDD. When **you get the grasp on BDD**, you will **be able to embrace TDD**.
 If they cannot be tested in full, you need to __challenge the relevance__
 of the non covered part: __it is __probably __useless code.__
+___
 
 ### 5. Some code do not need be tested
+###### The design of the Death Star is Rebel proof, right ?!
+![This will never happen, right?](./deathstar.gif)
+
+
 This one is somewhat true, but probably not to the extent you think it is:
 __code that works by construction does not require testing if it never changes__.
 That being said, please show me some code that will never change.
 
-![This will never happen, right?](./deathstar.gif)
-Same for trivial code: I am an average developer, and my long
-experience have taught me that my code working on the first attempt is an happy
-accident. Even if you are the god of code, chances are somebody else will break
+Plus, I am an average developer, and my long
+experience have taught me that my **code working on the first attempt is an happy accident**.
+Even if you are the god of code, chances are somebody else will break
 your code in a couple of months, weeks or even hours.
 And yes, that somebody else is probably the future you. Remember as I said
 earlier, a test is a contract. And contracts exist because people
@@ -129,41 +138,52 @@ getters or setters in isolation**. Which would probably be not only useless
 but likely harmful.
 Unit testing is not about testing method in isolation. **Your getters and
 setters should be tested as part of a larger, behavior related, test.**
-
+___
 
 ### 6. You need to use a mocking framework
-Nope, **chances are you don't**. Mocking frameworks are great pieces of
-engineering, but almost every time I have seen a team using it, mocks were
-everywhere with little to no added value. I have seen tests that ultimately
-test no production code whatsoever, but it took me hours peering at the code to
-realize it.
+###### Isn't it cute and mesmerizing ?
 ![Nifty, isn' it](./useless.gif)
 
-Unit testing does not mean you have to mock every class dependencies. Mocks are
-here to help you get **rid of slow or unstable dependencies**, such as a remote
-services, or some persistent storage.
+Nope, **chances are you don't**. Mocking frameworks are great pieces of
+engineering, but almost every time I have seen a team using it, mocks were
+pervasive within the test base with little to no added value. I have seen
+tests that ultimately
+test no production code whatsoever, but it took me hours peering at the code to
+come to that conclusion.
+
+
+Often teams are using mocks to test class in isolation, mocking every
+dependencies. Remember, **'unit'** in unit testing is to be understood **as a
+module or a component, not a class.**
+
+Whenever you decide to introduce a mock, you enforce a contract that makes
+refactoring more difficult.
+
+Mocks are here to help you get **rid of slow or unstable
+dependencies**, such as a remote services, or some persistent storage.
 
 You should not test for collaboration/dependencies between classes. Those tests
-are useful if you do bottom-up/inside-out TDD, but **you probably have to get
+are useful if you do bottom-up/inside-out TDD, but **you must get
 rid of them once the feature is complete**.
 Philippe Bourgau has a
 [great set of posts on this topic](philippe.bourgau.net/careless-mocking-considered-harmful/)
- if you are willing to dig further.
+ if you are wanting to dig further.
 
 ### 7. Tests are expensive to write
 Yes, **testing is expensive in most of industries**: think about testing
 a home appliance, a drug or a new car...
-
+###### Expensive test run in real life
 ![Actual crash test](./crashtest.gif)
 
 But **code is incredibly cheap**, giving
 the impression that tests are needlessly costly, in a relative way.
 
-They require effort, but they are efficient compliment or even replacement
-for  specifications, they improve quality, bring fast feedback, secure
-knowledge for newcomers.
-The main problem is that **green tests look useless** both to the team and to
-management.
+They do **require extra effort**, but they are efficient compliment or even
+replacement for specifications, they improve quality, bring fast feedback,
+secure knowledge for newcomers.
+
+But **green tests look useless** both to the team and to management.
+___
 
 ### 8. The 'testing pyramid' is the ultimate testing strategy
 You have probably heard of the **testing pyramid**. It basically states that
@@ -172,7 +192,8 @@ integration tests, and so one, up to the top of the pyramid where you have **a
 few use case based/acceptance tests**. It is used as the default testing
 strategy for most projects.
 
-![Testing Pyramid](./testing-pyramid.jpg)
+###### Pyramids can be dangerous!
+![Testing Pyramid](./pyramid.gif)
 
 Truth to be told, the ** testing pyramid outlived its usefulness**.
 Its original purpose was to address the fact that high level tests can have a
@@ -183,13 +204,34 @@ This is also a dangerous analogy, giving the impression that a ratio of 1000 to 
 
 > **You should focus on the top of the pyramid, not the bottom !**
 
-I have often seen teams that have **a handful of high level tests**, that
-covers some of the core use cases, in a very basic fashion that are nothing
-more than **glorified smoke tests**. And then thousands of unit tests to
-ensure a high coverage.
+ I often see teams that have only **a couple of high level tests**, that
+covers some of the core use cases, of crude, nothing
+more than **glorified smoke tests**. And then thousands of method tests to
+ensure a high coverage. This is not good.
 
-This is not good.
+ You need to have a decent set of use case based tests for your system, ideally
+covering all use cases, but major ones is a good start.
+This tests must be rely on your **high level public APIs**, just 'below' the
+user interface.
+Then have some **performance tests for the performance sensitive parts** of  
+the application, integrates also **failures reproducing tests**, such as
+external dependencies that are down (thanks to mock), to make sure your system
+handles those properly.
+And then, unit (as in module) tests for the dynamic part of your code base.
+Then understand the trade off:
+* Having a few unit tests means your design can
+easily be changed, but it means that finding the root cause of a failing high
+level tests will take time (and probably debugging).
+* Having a lot of those means you find issues as soon as they are introduced
+ in the code base, but significant re design of your solution will be ridden
+ with failing tests.
 
+if at any point in time you need to have finer tests, such as **class or
+method tests, throw them away as soon as you no longer need them**, such as
+when the initial design and implementation phase is over.  Otherwise they will
+drag your product down slowly.
+
+___
 # What about some truths ?
 
 ### 1. Unit tests are not about testing a method in isolation
@@ -294,7 +336,7 @@ tests you find redundant.
 You can see [this thread](https://twitter.com/Cyrdup/status/1016314667583574016) for an extensive
 discussion on having too many tests.
 
-### 8. Automated tests are usefulness
+### 8. Automated tests are useful
 As said earlier, a **green test looks useless**, **like any security device: safety belt, lifevest, emergency brakes...**
 Putting TDD value aside, tests prevent failures
 
