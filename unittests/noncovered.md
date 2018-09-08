@@ -1,7 +1,8 @@
 # Unit testing, you're doing it wrong
 
-TLDR; Existence of untested code in the wild should worry you. Good news is
-that you can do something about it. Also, there is a confusion about what
+TLDR; Existence of untested code in the wild should worry you: most of our
+lives is now somehow software controlled. Good news is
+that you can do something about it. Also, there is confusion about what
 __unit__ testing means.
 
 # Disclaimer
@@ -11,7 +12,7 @@ course comments are here to help you voice your opinion. And yes this piece is
 biased by my past experiences, but that's the point of it, sharing my
 experiences.
 
-## How legitimate are you?
+## 'How legitimate are you?''
 Fair question. I have a 35 years career in IT; I have worked at companies of
 various sizes and culture. I have often been in some transversal position and
 had the opportunity to meet and work with a lot of developers (think x000s)
@@ -235,6 +236,9 @@ ___
 # What about some truths ?
 
 ### 1. Unit tests are not about testing a method in isolation
+Good tests must test a **behavior** in isolation to **other tests**. Calling
+them unit, system or integration has no relevance to this.
+
 [Kent Beck says it so much better than I could ever do.](https://www.facebook.com/notes/kent-beck/unit-tests/1726369154062608/)
 >From this perspective, the **integration/unit test frontier is a frontier of
 design**, not of tools or frameworks or how long tests run or how many lines
@@ -256,11 +260,25 @@ assertions** to that effect.
 
 Coverage metrics are not about what is covered, but **about what is not
 covered.**
+Non covered means not tested. So at least make sure that non tested parts
+are non critical and that **important part of your code must be properly
+tested**!
 
 ### 3. There is a tooling problem
 The truth is **unit tests are in the spotlight** mostly **thanks to tooling!**
 We should be all eternally grateful to Kent Beck for 'inventing' sUnit, the
 library which triggered a testing revolution, but __we must not stop there__.
+
+Are you using test coverage tools (JCov, Clover, NCover, Jasmine...)?
+Do you look at their report?
+
+Have you tried continuous testing tools (InfinyTest, NCrunch, Wallaby...)?
+I have a bias: I am addicted to **NCrunch**.
+> Having your tests running continuously is a game changer for TDD!
+>
+>   Me
+
+
 Have you tried **Cucumber** to have a more use case driven approach? You may
 also consider using
 [**Mutation Testing**](https://en.wikipedia.org/wiki/Mutation_testing)
@@ -294,8 +312,6 @@ I attribute this difficulty to a set of factors:
 2. it constraints your design, and nobody likes extra constraints
 3. it gives you the impression of being unproductive
 
-
-
 ### 5. Tests require maintenance
 Tests require maintenance effort as any other piece of code. It needs
 refactoring along the source code of course, but it may also requires
@@ -304,7 +320,6 @@ They will have to be updated if new use cases are identified, or if existing
 ones must be altered.
 
 To sum it up: **tests are part of your codebase and must be treated as such**.
-
 
 ### 6. Having too many tests is a problem
 Since **tests need to evolve along the production code**, too much tests will
