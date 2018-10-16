@@ -29,6 +29,7 @@ Of course, this dos not imply that I am
 right, but at least, grant me that I have a comprehensive view of what I am
 talking about.
 
+
 # Fallacies about unit testing
 
 ### 1. TDD is all about unit tests
@@ -88,7 +89,7 @@ Writing a test is akin to writing down a contract or a specification, it fixes
 and enforces many decisions.
 __Your tests must focus on behavior__; behavior driven and use cases tests are the most important ones. Code coverage must include every tests,
 disregarding its type.
-
+![tests tests and tests](masstests.gif)
 **Improving coverage by simply adding specific tests for untested methods and
 classes is wrong**. Added tests must be justified by some
 requirements (new or existing); otherwise, it means the **code has no actual
@@ -125,7 +126,8 @@ __code that works by construction does not require testing if it never changes__
 That being said, please show me some code that will never change.
 
 Plus, I am an average developer, and my long
-experience have taught me that my **code working on the first attempt is an happy accident**.
+experience have taught me that my **code working on the first attempt is an
+happy accident**.
 Even if you are the god of code, chances are somebody else will break
 your code in a couple of months, weeks or even hours.
 And yes, that somebody else is probably the future you. Remember as I said
@@ -236,6 +238,13 @@ ___
 # What about some truths ?
 
 ### 1. Unit tests are not about testing a method in isolation
+Here is what [Wikipedia](https://en.wikipedia.org/wiki/Unit_testing) proposes:
+> In computer programming, unit testing is a software testing method by which
+> individual units of source code, sets of one or more computer program
+> modules together with associated control data, usage procedures, and
+>operating procedures, are tested to determine whether they are fit for use.[1]
+
+![isolation](test-isolation.png)
 Good tests must test a **behavior** in isolation to **other tests**. Calling
 them unit, system or integration has no relevance to this.
 
@@ -245,9 +254,9 @@ design**, not of tools or frameworks or how long tests run or how many lines
 of code we wrote get executed while running the test.
 >
 >**Kent Beck**
-
+___
 ### 2. 100% coverage does not mean your code is bug free
-This the first rebuttal I get, whenever I talk 100% coverage.
+This the first rebuttal I get whenever I talk about 100% coverage.
 Of course, __it does not__. Coverage only shows which part of the code have
 been executed. It does __not guarantee that it will work in all
 circumstances__, and it may still fail for specific parameters' values, some
@@ -264,9 +273,10 @@ Non covered means not tested. So at least make sure that non tested parts
 are non critical and that **important part of your code must be properly
 tested**!
 
+___
 ### 3. There is a tooling problem
 The truth is **unit tests are in the spotlight** mostly **thanks to tooling!**
-We should be all eternally grateful to Kent Beck for 'inventing' sUnit, the
+We should be all eternally grateful to Kent Beck for creating sUnit, the
 library which triggered a testing revolution, but __we must not stop there__.
 
 Are you using test coverage tools (JCov, Clover, NCover, Jasmine...)?
@@ -278,86 +288,145 @@ I have a bias: I am addicted to **NCrunch**.
 >
 >   Me
 
+No seriously, **do it, now!** It will change your perceived value for tests.
 
 Have you tried **Cucumber** to have a more use case driven approach? You may
 also consider using
 [**Mutation Testing**](https://en.wikipedia.org/wiki/Mutation_testing)
 , to assess the quality of your tests.
 [**Property Based Testing**](http://blog.jessitron.com/2013/04/property-based-testing-what-is-it.html)
- is also a step in the right direction.
+is useful to check for invariants and higher level abstractions.
 
 ![Testing](./Engine tuning.jpg)
 
-
+___
 ### 4. It is difficult
 Yes, but this is **no more difficult than designing the software up front**.
 You face complexity, but what is interesting in test first approaches,
 is that you have an opportunity to focus on
 **[essential complexity](https://www.quora.com/What-are-essential-and-accidental-complexity)**
 as test code ought to be simpler than actual implementation.
+![Difficult](difficult.gif)
 
-I have now animated many craftsmanship discovering sessions based on [Lego exercises (French slides)](https://speakerdeck.com/dupdob/software-craftsmanship-par-la-pratique)
+I have animated many craftsmanship discovering sessions based on [Lego
+exercises (French
+  deck)](https://speakerdeck.com/dupdob/software-craftsmanship-par-la-pratique)
 . After the TDD exercise, attendants often express that **the difficult part
 was choosing the right test**, and building the solution was straightforward.
-Interestingly, even non coder profiles (BA, managers, CxO) share this feeling,
-often saying how comfortable it was just following requirements, versus the
-hardship of identifying a test.
+Interestingly, even non coder profiles (BA, managers, CxO, ...) share this
+feeling, sometime event saying how comfortable it was just to follow
+requirements, versus the hardship of identifying a test (in TDD mode).
 
 >  Choosing the next test is an act of design.
 >
 >  (attributed to) Kent Beck
 
 I attribute this difficulty to a set of factors:
-1. it forces you to think problem first, while solution first is everyone bias
-2. it constraints your design, and nobody likes extra constraints
+1. it forces you to think **problem first**, while **solution first** is
+everyone comfort zone
+2. it constrains your design, and nobody likes extra constraints
 3. it gives you the impression of being unproductive
 
+But all those factors turn into benefits:
+1. Problem first is the right focus!
+2. Constraints help you drive the design. And as you are problem first, this
+is bound to be a good design.
+3. Worst case, tests will be thrown away. But they helped you build a solution
+and a deep understanding of the problem. At best, they prevent future
+regression, and provide help and documentation for future developers.
+
+Writing tests is never unproductive.
+
+___
 ### 5. Tests require maintenance
-Tests require maintenance effort as any other piece of code. It needs
-refactoring along the source code of course, but it may also requires
+![Maintenance](maintenance.gif)
+
+**Tests require maintenance effort as any other piece of code**. It needs
+refactoring along the source code, but it may also requires
 refactoring on its own.
 They will have to be updated if new use cases are identified, or if existing
 ones must be altered.
 
 To sum it up: **tests are part of your codebase and must be treated as such**.
+Which leads to the next truth:
 
+___
 ### 6. Having too many tests is a problem
-Since **tests need to evolve along the production code**, too much tests will
+Since **tests need to evolve with the production code**, too much tests will
 hamper your productivity: if changing some lines of code break hundred
 tests or more, the cost (of change) becomes an issue.
 This is a sure sign of failing to tender for your tests appropriately:
-tests are replicated with only minor variations.
+tests may be replicated with only minor variations, each one adding little
+value.
 
 I have seen projects and teams that were grounded to a halt due to having a
-large test base. Then there is a strong likelihood that the test base may be
-simply thrown away, or cut through savagely.
+far too large test base. Then there is a strong likelihood that the test base  
+may be simply thrown away, or cut through savagely.
 
 ![Automated tests](./incrediblemachine.gif)
 
 Ultimately, **tests also increase build time**, and as you are doing continuous
-build/delivery (you are, aren't you?), you need to keep build time as low as possible.
+build/delivery (you are, aren't you?), you need to keep build time as low as
+possible.
 
+This has a clear consequence:
+
+___
 ### 7. Throwing away tests is a hygienic move
-**It should be obvious by now that you need to maintain a manageable number of tests.**
+**It should be obvious by now that you need** to maintain **a manageable
+number of tests.**
 Therefore you must have some form of optimization strategy for you test base.
 Articles are pretty much non existent for this kind of activity, so let me make
 a proposal:
-- getting rid of _scaffolding tests_ should be part of your TDD/BDD coding cycle.
+- getting rid of _scaffolding tests_ should be part of your TDD/BDD coding
+cycle.
 By scaffolding tests, I mean tests that you used to write the code in the
-first place, identify algorithm(s) and explore the problem space.
+first place, identify algorithm(s) and explore the problem space. Only keep
+use case based tests.
 - make regular code coverage review, identify highly tested lines and remove
 tests you find redundant.
 
 You can see [this thread](https://twitter.com/Cyrdup/status/1016314667583574016) for an extensive
 discussion on having too many tests.
-
+![Recycling](Recycling.gif)
+___
 ### 8. Automated tests are useful
-As said earlier, a **green test looks useless**, **like any security device: safety belt, lifevest, emergency brakes...**
-Putting TDD value aside, tests prevent failures
+Last but not least. Automated tests have a lot of value.
+Yes, a **green test looks useless**, **like any security device: safety belt,
+life vest, emergency brakes...**
 
-[Simple testing can prevent most critical failures](https://blog.acolyer.org/2016/10/06/simple-testing-can-prevent-most-critical-failures/)
+If you practice
+TDD, tests have value right now. But even if you don't, tests have value in
+the long run.
 
-[Source PDF](https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf)
-# Appendix
+An interesting and important 2014 study done analyzed **198 user reported
+issues** on distributed systems. Among several important findings, it
+concluded that **77% of the analyzed production issues can be reproduced by a
+unit test.**
+Another key finding was that almost all **catastrophic failures were the
+result of incorrect error handling**.
 
-[TDD article](http://members.iinet.net.au/~ijoyner@ihug.com.au/Ian_Joyner/TDD_vs_DBC.html)
+![Catastrophe](explosion.gif)
+**[Simple testing can prevent most critical failures](https://blog.acolyer.org/2016/10/06/simple-testing-can-prevent-most-critical-failures/)**
+
+**[Source study](https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf)**
+
+___
+
+# Conclusion
+First of all, thanks for having the patience of reading this so far. If you
+are dubious about unit tests, I hope this article cleared some of your
+concerns and gave you some reason to try it.
+If you are already doing unit testing, I hope I offered you some guidance to help you avoid the dangerous mines that lie ahead.
+And if you think you're a master at unit testing, I hope you share my point of views and that I gave you strong arguments to convince other.
+
+Each of the facts I listed previously is worthy of a dedicated talk or article.
+Digging further is left as an exercise for the so minded reader.
+
+**Remember:**
+1. **Tests are useful, they can prevent catastrophic failures.**
+2. **Test behaviors, not implementation**. A.k.a. understand what *unit*
+stands for in *unit tests*.
+3. **Maintain your test base with the delicate but strong hand of the
+gardener**: gently refactoring when necessary and pruning out when no longer
+useful.
