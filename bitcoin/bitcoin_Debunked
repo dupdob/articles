@@ -1,0 +1,59 @@
+# Debunking Bitcoin related myths
+_____
+
+Each time **I see some bitcoin related BS on Twitter, I denounce it**. I often get
+rebuttal from bitcoin fanboys, to which I provide justified answer. But
+I am starting to be tired by this exercise, and Twitter is no medium for
+a proper argument.
+
+Being as lazy as the next developer, this post will contain all my concerns
+about bitcoin, so that for the next argument, I will simply provide a link to
+this article.
+
+## Approach
+I will debunk myths both from an implementation point of view as well as from
+a theorical point of view.
+
+## Disclaimer
+I have a long experience in banking IT, and in distributed systems, real time
+architecture and performance related issues. I am interested in Bitcoin from a
+technical perspective as well as social dynamic perspective. It is a fascinating
+software that offers inventing solution.
+I am no expert,
+and I am here to learn.
+
+
+# Implementation concerns
+## Performance
+This is a well known issue: bitcoin has a throughput problem. Currently it tops
+at less than 3 transactions, per second, worldwide.
+[Source](https://www.blockchain.com/charts/transactions-per-second)
+
+As a benchmark value, Mastercard processes around 40,000 transactions per second.
+
+Despite various evolutions, such as increasing the maximum size of blocks, the
+transaction rates is actually decreasing.
+
+And then, a BTC fanboy will fight with a brand new feature
+
+## Lightning Networks allows unlimited transactions
+
+TL, DR: **No, they don't**.
+
+A somewhat longer answer is: **no, they  actually offer unlimited negotiations.**
+
+Lightning Network is a clever solution from a technical perspective, allowing
+to piggyback modifiable transactions on top of the the blockchain and providing
+alternative fraud prevention strategy. Granted.
+And those transactions can be modified quickly without going through the
+relatively lengthy blockchain process, allowing **thousands of modifications
+per second** per network. Hence it is scalable.
+
+**Sounds great!**
+
+At the macro level, you create a *channel* on the blockchain. This implies
+recording a transaction on the blockchain; this is a specific kind of
+transactions, but it happens at the same speed as any other transaction, i.e.
+**3/seconds** worldwide.
+
+But after that, you can publish several updates to this transaction at full speed
