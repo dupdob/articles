@@ -264,11 +264,14 @@ public void FailDurationTest()
 
 ```
 _Yes, the regular expression is still a bit permissive_.
-**Voilà, all related mutants are killed.**
+**But all related mutants are killed.**
 
-And you know the best part of this: there was actually a regression in the code
-that garbled the error message. It turned out it was introduced a year before
-after a refactoring.
+And you know the best part of this: **there was actually a regression in the code
+that garbled the error message**. It turned out it was introduced a year before
+after a refactoring. And the insufficient assertions let it pass undetected.
+
+### 3. Edge cases
+That is mutants that survived because they relate to somewhat blurry situation
 
 Notes:
 1. I had a lot of timeout results on my laptop. I realized it was related to
