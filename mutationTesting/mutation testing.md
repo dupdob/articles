@@ -184,8 +184,8 @@ That is, mutants that survived simply because the code was not part of any test
 whatsoever.
 It should not have happened, since I have 100% test coverage.
 Yes but NFluent relies on several test assemblies to reach 100% coverage, and
-current Stryker version are used against a single testing assembly.
-We use several assemblies for valid reasons, as we have one per supported
+current Stryker versions can only be applied on a single testing assembly.
+We use several assemblies for good reasons, as we have one per supported
 Net framework version (2.0, 3.0, 3.5, 4.0, 4.5, 4.7, net standard 1.3 and 2.0)
 as well as one per testing framework we explicitly support
 (NUnit, xUnit, MSTest).
@@ -193,7 +193,7 @@ But also for **less valid reasons, such as testing edge cases for low level
 utility code**.
 
 For me, those survivors are signs of slight ugliness that should be fixed but
-may not be due to external constraints.
+may not be due to external constraints, **in the context of NFluent**.
 As I said earlier, I suspect this is the largest group, 25-30% of the overall
 population (in NFluent case).
 
@@ -237,7 +237,7 @@ But the actual message looks like this
 ```
 The checked code's execution time was too high.
 The checked code's execution time:
-	[0,7692 Milliseconds]
+	[0.7692 Milliseconds]
 The expected code's execution time: less than
 	[0 Milliseconds]
 ```
@@ -261,19 +261,85 @@ public void FailDurationTest()
             "The expected code's execution time: less than",
             "\t[0 Milliseconds]");
 }
-
 ```
 _Yes, the regular expression is still a bit permissive_.
 **But all related mutants are killed.**
 
-And you know the best part of this: **there was actually a regression in the code
+And you know the best part of this: in the actual NFluent's code **there was a
+regression
 that garbled the error message**. It turned out it was introduced a year before
 after a refactoring. And the insufficient assertions let it pass undetected.
+**So I was able to fix an issue thanks to Stryker-Mutator!**
 
-### 3. Edge cases
-That is mutants that survived because they relate to somewhat blurry situation
+### 3. Limit cases
+That is mutants that survived because they relate to how limits are handled in
+the code and the tests. Mutation of limits handling strategy may survive if you
+do not explicitly have tests for them.
+The typical case is this one:
+```csharp
+public static ICheckLink<ICheck<TimeSpan>> IsGreaterThan(this ICheck<TimeSpan> check, Duration providedDuration)
+{
+    ExtensibilityHelper.BeginCheck(check)
+        .CheckSutAttributes( sut => new Duration(sut, providedDuration.Unit), "")
+        // important line is here
+        .FailWhen(sut => sut <= providedDuration, "The {0} is not more than the limit.")
+        .OnNegate("The {0} is more than the limit.")
+        .ComparingTo(providedDuration, "more than", "less than or equal to")
+        .EndCheck();
+    return ExtensibilityHelper.BuildCheckLink(check);
+}
+```
+As you can see, **IsGreaterThan** implements a strict comparison, hence if the
+duration is equal to the provided limit, the check will fail.
+Here are the tests for this check:
+```csharp
+[Test]
+public void IsGreaterThanWorks()
+{
+    var testValue = TimeSpan.FromMilliseconds(500);
+    Check.That(testValue).IsGreaterThan(TimeSpan.FromMilliseconds(100));
+
+    Check.ThatCode(() =>
+        {
+            Check.That(TimeSpan.FromMilliseconds(50)).IsGreaterThan(100, TimeUnit.Milliseconds);
+        })
+        .IsAFailingCheckWithMessage("",
+            "The checked duration is not more than the limit.",
+            "The checked duration:",
+            "\t[50 Milliseconds]",
+            "The expected duration: more than",
+            "\t[100 Milliseconds]");
+}
+```
+Stryker-Mutator.Net will mutate the comparison replacing **<=** by **<**
+```csharp
+,FailWhen(sut => sut < providedDuration, "The {0} is not more than the limit.")
+```
+And the tests will keep on working. My initial reaction was to regard those as
+false positive. On second thought, I realized that **not having a test
+to deal with the limit case, was equivalent to consider the limit case as
+undefined behavior**. Indeed, any change of behavior would introduce a slient
+breaking change. Definitely not what I am ok with....
+
+Of course, the required change is trivial, **adding the following test**:
+```csharp
+[Test]
+public void IsGreaterThanFailsOnLimitValue()
+{
+    Check.ThatCode(() =>
+        {
+            Check.That(TimeSpan.FromMilliseconds(50)).IsGreaterThan(50, TimeUnit.Milliseconds);
+        })
+        .IsAFailingCheckWithMessage("",
+            "The checked duration is not more than the limit.",
+            "The checked duration:",
+            "\t[50 Milliseconds]",
+            "The expected duration: more than",
+            "\t[50 Milliseconds]");
+}
+```
 
 Notes:
 1. I had a lot of timeout results on my laptop. I realized it was related to
-my MBA going into sleep. I revised the timeout strategy to handle this situation
+my MBA going into sleep. I revised Striker's timeout strategy to handle this situation
 and voilà, no more random timeouts.
