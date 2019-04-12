@@ -318,7 +318,7 @@ Stryker-Mutator.Net will mutate the comparison replacing **<=** by **<**
 And the tests will keep on working. My initial reaction was to regard those as
 false positive. On second thought, I realized that **not having a test
 to deal with the limit case, was equivalent to consider the limit case as
-undefined behavior**. Indeed, any change of behavior would introduce a slient
+undefined behavior**. Indeed, any change of behavior would introduce a silent
 breaking change. Definitely not what I am ok with....
 
 Of course, the required change is trivial, **adding the following test**:
@@ -338,6 +338,37 @@ public void IsGreaterThanFailsOnLimitValue()
             "\t[50 Milliseconds]");
 }
 ```
+### 4. Refactoring needed
+This is the category that hurts me the most, but I deserve it so much I can't
+complain.
+Wherever I have complex code, ridden with multi criteria conditions and multi-lines
+expressions, I get a high survival rate (high as in 30-40%).
+[This method is a good example of such a code.](https://github.com/tpierrain/NFluent/blob/afda06c1bf761b598a0eaa32f4646510a56f6729/src/NFluent/Helpers/StringDifference.cs#L114)
+This method has such cyclomatic complexity as well as overlapping conditions
+that many mutants are able to survive. Each of them is a false positive, in
+essence, but the sheer numbers of those is a clear smell.
+Here is an example of surviving mutants:
+```csharp
+// original line
+var boolSingleLine = actualLines.Length == 1 && expectedLines.Length == 1;
+...
+// mutant
+var boolSingleLine = actualLines.Length == 1 || expectedLines.Length == 1;
+```
+This flag is used in string comparison to optimize error messages.
+
+It turns out that you cannot devise a test that would kill this mutant: due to
+the logic in previous lines, either _actualLines_ and _expectedLines_ have
+both one line, or they both have more than one.
+I was tempted to just mark it as a false positive and do nothing about it. But
+then I realized that it was a smell, the smell of bugs to come: the flow was **objectively** so complex that I could no longer assume I was able to understand, lest anticipate the impact of any change ([link to original code](https://github.com/tpierrain/NFluent/blob/b4a4e0f405c36e7aba72df74d06c493b5c30e2d5/src/NFluent/Helpers/StringDifference.cs#L114)).
+
+So I refactored it toward a simpler and cleaner design ([new version here](https://github.com/tpierrain/NFluent/blob/7246b51150260530158f2318c10e503adc968319/src/NFluent/Helpers/StringDifference.cs#L141)).
+
+### 5.Algorithm simplification
+Kinda like the previous 
+
+
 
 Notes:
 1. I had a lot of timeout results on my laptop. I realized it was related to
