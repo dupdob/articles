@@ -355,18 +355,19 @@ var boolSingleLine = actualLines.Length == 1 && expectedLines.Length == 1;
 // mutant
 var boolSingleLine = actualLines.Length == 1 || expectedLines.Length == 1;
 ```
-This flag is used in string comparison to optimize error messages.
+_This flag (boolSingleLine) is used in string comparison to optimize error messages._
 
 It turns out that you cannot devise a test that would kill this mutant: due to
-the logic in previous lines, either _actualLines_ and _expectedLines_ have
+the logic in previous lines (not displayed here) either _actualLines_ and _expectedLines_ have
 both one line, or they both have more than one.
+
 I was tempted to just mark it as a false positive and do nothing about it. But
 then I realized that it was a smell, the smell of bugs to come: the flow was **objectively** so complex that I could no longer assume I was able to understand, lest anticipate the impact of any change ([link to original code](https://github.com/tpierrain/NFluent/blob/b4a4e0f405c36e7aba72df74d06c493b5c30e2d5/src/NFluent/Helpers/StringDifference.cs#L114)).
 
 So I refactored it toward a simpler and cleaner design ([new version here](https://github.com/tpierrain/NFluent/blob/7246b51150260530158f2318c10e503adc968319/src/NFluent/Helpers/StringDifference.cs#L141)).
 
 ### 5.Algorithm simplification
-Kinda like the previous 
+Kinda like the previous
 
 
 
