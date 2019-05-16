@@ -361,14 +361,52 @@ It turns out that you cannot devise a test that would kill this mutant: due to
 the logic in previous lines (not displayed here) either _actualLines_ and _expectedLines_ have
 both one line, or they both have more than one.
 
-I was tempted to just mark it as a false positive and do nothing about it. But
-then I realized that it was a smell, the smell of bugs to come: the flow was **objectively** so complex that I could no longer assume I was able to understand, lest anticipate the impact of any change ([link to original code](https://github.com/tpierrain/NFluent/blob/b4a4e0f405c36e7aba72df74d06c493b5c30e2d5/src/NFluent/Helpers/StringDifference.cs#L114)).
+**I was tempted to just mark it as a false positive and do nothing about it**; but then I realized that it was a smell, the smell of bugs to come: the flow was **objectively** so complex that I could no longer understand, lest anticipate the impact of any change ([link to original code](https://github.com/tpierrain/NFluent/blob/b4a4e0f405c36e7aba72df74d06c493b5c30e2d5/src/NFluent/Helpers/StringDifference.cs#L114)).
 
 So I refactored it toward a simpler and cleaner design ([new version here](https://github.com/tpierrain/NFluent/blob/7246b51150260530158f2318c10e503adc968319/src/NFluent/Helpers/StringDifference.cs#L141)).
 
 ### 5.Algorithm simplification
-Kinda like the previous
+It relates to the need for refactoring, but with deeper benefits: sometimes
+you end with a needlessly complex algorithm, but you do not know how to
+simplify it.
+If you already have full test coverage (line and branch), having a survivor
+may be the sign that you have useless conditions, or unreachable program state.
+Here is an example: the **InThatOrder** implementation method.
+Its purpose is to verify that a set of values appears in the proposed order within an other enumeration (the _sut_) ignoring missing values.
+My [original implementation](https://github.com/tpierrain/NFluent/blob/afda06c1bf761b598a0eaa32f4646510a56f6729/src/NFluent/Checks/EnumerableFluentSyntaxExtension.cs#L168)'s algorithm was:
+1. select the first value V from the list of expected values _expected_
+1. for each entry T in _sut_
+1. if it is different from the expected one:
+  1. check if T is present in the rest of _expected_
+    1. if yes, select its position in _expectedLines_, and skip duplicates
+    1. if no and T is present **before** the current position, return an error
+  1. if T is not present in the rest but is present before the
+  current position returns an error.
+1. when every _sut_ entry has been checked, return that everything is fine
 
+But Stryker generated a mutant with inverted condition for line 3 (if is the same as the expected one)!
+
+I peered at the code, tried to add some test to kill the mutant, to no avail.
+In fact, this condition was useless, or to be more specific, it was redundant
+with the overall logic.
+So I removed it, achieving [cleaner code](https://github.com/tpierrain/NFluent/blob/b66b4685d6387a2ffbb3bb9d0d60d61a723ebb53/src/NFluent/Checks/EnumerableFluentSyntaxExtension.cs#L168).
+
+
+### 6. Conclusion
+A few years ago, Alexandre Victoor (@Alex_victoor) kept telling me about the
+virtues of mutant testing. I was somewhat convinced, but I saw it a bit
+overkill and somewhat impractical. But still eager to test, nonetheless.
+Alas nothing was available for .Net.
+The good news is that this is no longer true. And you should try it to:
+1. At the very least it will show you how much risk remains in your code and
+help you identify where your should add some tests.
+1. If you have decent coverage, it will help you improve your code and your design.
+
+
+You should try it now. At this writing, Stryker has reached version 0.11 and
+fully usable. Try it, discover what it entails and what it provides.
+
+It will help you improve your skills and move forward.
 
 
 Notes:
