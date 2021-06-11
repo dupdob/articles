@@ -1,7 +1,7 @@
 # Advent of Code 2019: Post 2
 _Note: this post is part of a serie. You may want to read the first one to get the context._
 
-Welcome back! I am glad to see you are still interested. Well, I have got good news for you. If the first two puzzles were mundate, the next serie gets interesting.
+Welcome back! I am glad to see you are still interested. Well, I have got good news for you. If the first two puzzles were mundane, the next serie batch interesting.
 
 # DAY 3: [Crossed Wires](https://adventofcode.com/2019/day/3)
 *A.k.a: Building the computer, step #1*

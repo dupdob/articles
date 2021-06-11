@@ -91,4 +91,11 @@ Thomas opened some Google groups to have a discussion channels with users end of
 
 
 ### Strenghtening the product vision
-The project evolves rapidly. 4 weeks after the first commit, Thomas adds [UseCases.md](https://github.com/tpierrain/NFluent/blob/bfc7844f75dbe7c50c14a9c4fa5bef22c2e83b6d/UseCases.md) which lists the main features of NFLuent.
+The project evolves rapidly. 4 weeks after the first commit, Thomas adds [UseCases.md](https://github.com/tpierrain/NFluent/blob/bfc7844f75dbe7c50c14a9c4fa5bef22c2e83b6d/UseCases.md) which lists the foundational UX principles for NFluent:
+
+- Fluent to Write
+- Fluent to read
+- Crystal clear structure
+- Helpful on legacy code
+
+ 
