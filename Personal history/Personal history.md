@@ -7,6 +7,10 @@ By building this list, I simply wanted to:
 
 This is listed in chronological order, with no specific structure as of V1.
 
+# What is my view on coding after ~40 years of practice
+As if I need
+
+
 # Beginnings
 ## my first computer (1983)
 A ZX Spectrum 48; a 4Mhz 16/8 bits CPU, 48Ko RAM, integrated Basic, tape storage. It has been my single computer for 4 years, dabbled with Basic and switched to assembler after two years or so.
